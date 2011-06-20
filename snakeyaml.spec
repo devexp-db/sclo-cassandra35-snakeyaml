@@ -3,7 +3,7 @@
 
 Name:             snakeyaml
 Version:          1.8
-Release:          5%{?dist}
+Release:          6%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 Group:            Development/Libraries
@@ -14,10 +14,9 @@ Source0:          http://%{name}.googlecode.com/files/SnakeYAML-all-%{version}.z
 Source1:          %{name}.depmap
 
 Patch0:           %{name}-spring-removal-workaround.patch
-Patch1:           %{name}-test-fails-workaround.patch
-Patch2:           %{name}-gdata+base64coder+cobertura-addition.patch
-Patch3:           %{name}-issue121-file-handle-leaks.patch
-Patch4:           %{name}-add-osgi-metadata.patch
+Patch1:           %{name}-gdata+base64coder+cobertura-addition.patch
+Patch2:           %{name}-issue121-file-handle-leaks.patch
+Patch3:           %{name}-add-osgi-metadata.patch
 
 BuildArch:        noarch
 
@@ -64,7 +63,6 @@ This package contains the API documentation for %{name}.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 # remove bundled stuff
 rm -rf target
@@ -110,6 +108,9 @@ cp -pr target/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Mon Jun 20 2011 Jaromir Capik <jcapik@redhat.com> - 1.8-6
+- Patch for the issue67 test removed
+
 * Fri Jun 17 2011 Stanislav Ochotnicky <sochotnicky@redhat.com> - 1.8-5
 - Add osgi metadata to jar file (#713935)
 
