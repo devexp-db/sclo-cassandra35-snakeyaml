@@ -2,21 +2,19 @@
 %global group_id  org.yaml
 
 Name:             snakeyaml
-Version:          1.8
-Release:          7%{?dist}
+Version:          1.9
+Release:          1%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 Group:            Development/Libraries
 # http://code.google.com/p/snakeyaml
 URL:              http://code.google.com/p/%{name}
-# http://snakeyaml.googlecode.com/files/SnakeYAML-all-1.8.zip
+# http://snakeyaml.googlecode.com/files/SnakeYAML-all-1.9.zip
 Source0:          http://%{name}.googlecode.com/files/SnakeYAML-all-%{version}.zip
 Source1:          %{name}.depmap
 
 Patch0:           %{name}-spring-removal-workaround.patch
 Patch1:           %{name}-gdata+base64coder+cobertura-addition.patch
-Patch2:           %{name}-issue121-file-handle-leaks.patch
-Patch3:           %{name}-add-osgi-metadata.patch
 
 BuildArch:        noarch
 
@@ -61,8 +59,6 @@ This package contains the API documentation for %{name}.
 
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 # remove bundled stuff
 rm -rf target
@@ -85,17 +81,11 @@ install -p -m 644 target/%{name}-%{version}.jar %{buildroot}%{_javadir}/%{name}.
 # pom
 install -d -m 755 %{buildroot}%{_mavenpomdir}
 install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-%add_to_maven_depmap %{group_id} %{name} %{version} JPP %{name}
+%add_maven_depmap JPP-%{name}.pom %{name}.jar
 
 # javadoc
 install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
 cp -pr target/apidocs/* %{buildroot}%{_javadocdir}/%{name}
-
-%post
-%update_maven_depmap
-
-%postun
-%update_maven_depmap
 
 %files
 %doc LICENSE.txt
@@ -108,6 +98,11 @@ cp -pr target/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Fri Jan 20 2012 Mo Morsi <mmorsi@redhat.com> - 1.9-1
+- Update to latest upstream release
+- patch2, patch3 no longer needed
+- update to latest fedora java guidelines
+
 * Sat Jan 14 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
