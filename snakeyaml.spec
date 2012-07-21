@@ -3,7 +3,7 @@
 
 Name:             snakeyaml
 Version:          1.9
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 Group:            Development/Libraries
@@ -98,6 +98,9 @@ cp -pr target/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Sat Jul 21 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.9-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Fri Jan 20 2012 Mo Morsi <mmorsi@redhat.com> - 1.9-1
 - Update to latest upstream release
 - patch2, patch3 no longer needed
