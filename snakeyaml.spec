@@ -2,8 +2,8 @@
 %global group_id  org.yaml
 
 Name:             snakeyaml
-Version:          1.9
-Release:          3%{?dist}
+Version:          1.11
+Release:          1%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 Group:            Development/Libraries
@@ -12,17 +12,16 @@ URL:              http://code.google.com/p/%{name}
 # http://snakeyaml.googlecode.com/files/SnakeYAML-all-1.9.zip
 Source0:          http://%{name}.googlecode.com/files/SnakeYAML-all-%{version}.zip
 
-Patch0:           %{name}-spring-removal-workaround.patch
-
 BuildArch:        noarch
 
 BuildRequires:    java-devel
 BuildRequires:    jpackage-utils
 BuildRequires:    maven
-BuildRequires:    maven-plugin-cobertura
 BuildRequires:    maven-surefire-provider-junit4
+BuildRequires:    cobertura
 BuildRequires:    joda-time
 BuildRequires:    gnu-getopt
+BuildRequires:    springframework
 
 Requires:         java
 Requires:         jpackage-utils
@@ -49,8 +48,10 @@ This package contains the API documentation for %{name}.
 %prep
 %setup -q -n %{name}
 
-%patch0 -p1
-%pom_add_dep org.codehaus.mojo:cobertura-maven-plugin:any:test
+%pom_remove_plugin org.codehaus.mojo:cobertura-maven-plugin
+%pom_add_dep net.sourceforge.cobertura:cobertura:any:test
+sed -i "/<artifactId>spring</s/spring/&-core/" pom.xml
+rm -f src/test/java/examples/SpringTest.java
 
 # remove bundled stuff
 rm -rf target
@@ -88,6 +89,9 @@ cp -pr target/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Mon Oct 15 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.11-1
+- Update to upstream version 1.11
+
 * Mon Oct 15 2012 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.9-3
 - Remove unneeded dependencies: base64coder, gdata-java
 - Convert pom.xml patch to POM macro
