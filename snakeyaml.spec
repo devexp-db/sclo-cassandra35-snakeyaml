@@ -3,7 +3,7 @@
 
 Name:             snakeyaml
 Version:          1.11
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 Group:            Development/Libraries
@@ -21,7 +21,7 @@ BuildRequires:    maven-surefire-provider-junit4
 BuildRequires:    cobertura
 BuildRequires:    joda-time
 BuildRequires:    gnu-getopt
-BuildRequires:    springframework
+%{?fedora:BuildRequires: springframework}
 
 Requires:         java
 Requires:         jpackage-utils
@@ -62,7 +62,7 @@ rm -rf src/main/java/biz
 sed -i 's/\r//g' LICENSE.txt
 
 %build
-mvn-rpmbuild install
+mvn-rpmbuild %{!?fedora:-Dmaven.test.skip=true} install
 
 %install
 # jars
@@ -89,6 +89,9 @@ cp -pr target/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Wed Apr 10 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.11-4
+- Conditionally disable tests
+
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
