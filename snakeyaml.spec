@@ -61,6 +61,11 @@ rm -rf src/main/java/biz
 # convert CR+LF to LF
 sed -i 's/\r//g' LICENSE.txt
 
+%if !0%{?fedora}
+# Remove test dependencies because tests are skipped anyways.
+%pom_xpath_remove "pom:dependency[pom:scope[text()='test']]"
+%endif
+
 %build
 mvn-rpmbuild %{!?fedora:-Dmaven.test.skip=true} install
 
@@ -91,6 +96,7 @@ cp -pr target/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %changelog
 * Wed Apr 10 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.11-4
 - Conditionally disable tests
+- Conditionally remove test dependencies from POM
 
 * Fri Feb 15 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
