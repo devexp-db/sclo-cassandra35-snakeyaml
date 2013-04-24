@@ -3,7 +3,7 @@
 
 Name:             snakeyaml
 Version:          1.11
-Release:          4%{?dist}
+Release:          5%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 Group:            Development/Libraries
@@ -11,6 +11,12 @@ Group:            Development/Libraries
 URL:              http://code.google.com/p/%{name}
 # http://snakeyaml.googlecode.com/files/SnakeYAML-all-1.9.zip
 Source0:          http://%{name}.googlecode.com/files/SnakeYAML-all-%{version}.zip
+
+# Replace bundled Base64 implementation
+# not upstreamable: http://code.google.com/p/snakeyaml/issues/detail?id=175
+Patch0:           0001-Replace-bundled-base64-implementation.patch
+# We don't have gdata-java-client in Fedora, use commons-codec instead
+Patch1:           0002-Replace-bundled-gdata-java-client-classes-with-commo.patch
 
 BuildArch:        noarch
 
@@ -21,10 +27,14 @@ BuildRequires:    maven-surefire-provider-junit4
 BuildRequires:    cobertura
 BuildRequires:    joda-time
 BuildRequires:    gnu-getopt
+BuildRequires:    base64coder
+BuildRequires:    apache-commons-codec
 %{?fedora:BuildRequires: springframework}
 
 Requires:         java
 Requires:         jpackage-utils
+Requires:         base64coder
+Requires:         apache-commons-codec
 
 %description
 SnakeYAML features:
@@ -48,15 +58,20 @@ This package contains the API documentation for %{name}.
 %prep
 %setup -q -n %{name}
 
+%patch0 -p1
+%patch1 -p1
+
 %pom_remove_plugin org.codehaus.mojo:cobertura-maven-plugin
 %pom_add_dep net.sourceforge.cobertura:cobertura:any:test
 sed -i "/<artifactId>spring</s/spring/&-core/" pom.xml
 rm -f src/test/java/examples/SpringTest.java
 
+# Replacement for bundled gdata-java-client
+%pom_add_dep commons-codec:commons-codec
+
 # remove bundled stuff
 rm -rf target
-rm -rf src/main/java/com
-rm -rf src/main/java/biz
+rm -rf src/main/java/org/yaml/snakeyaml/external
 
 # convert CR+LF to LF
 sed -i 's/\r//g' LICENSE.txt
@@ -94,6 +109,10 @@ cp -pr target/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Mon Apr 22 2013 Michal Srb <msrb@redhat.com> - 1.11-5
+- Replace bundled base64 implementation
+- Replace bundled gdata-java-client classes with apache-commons-codec
+
 * Wed Apr 10 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.11-4
 - Conditionally disable tests
 - Conditionally remove test dependencies from POM
