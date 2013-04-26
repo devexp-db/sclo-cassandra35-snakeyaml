@@ -12,10 +12,14 @@ URL:              http://code.google.com/p/%{name}
 # http://snakeyaml.googlecode.com/files/SnakeYAML-all-1.9.zip
 Source0:          http://%{name}.googlecode.com/files/SnakeYAML-all-%{version}.zip
 
-# Replace bundled Base64 implementation
-# not upstreamable: http://code.google.com/p/snakeyaml/issues/detail?id=175
+# Upstream has forked gdata-java and base64 and refuses [1] to
+# consider replacing them by external dependencies.  Bundled libraries
+# need to be removed and their use replaced by system libraries.
+# See rhbz#875777 and http://code.google.com/p/snakeyaml/issues/detail?id=175
+#
+# Remove use of bundled Base64 implementation
 Patch0:           0001-Replace-bundled-base64-implementation.patch
-# We don't have gdata-java-client in Fedora, use commons-codec instead
+# We don't have gdata-java in Fedora any longer, use commons-codec instead
 Patch1:           0002-Replace-bundled-gdata-java-client-classes-with-commo.patch
 
 BuildArch:        noarch
@@ -109,6 +113,10 @@ cp -pr target/apidocs/* %{buildroot}%{_javadocdir}/%{name}
 %doc %{_javadocdir}/%{name}
 
 %changelog
+* Fri Apr 26 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.11-5
+- Explain gdata-java and base64 bundling situation
+- Resolves: rhbz#875777
+
 * Mon Apr 22 2013 Michal Srb <msrb@redhat.com> - 1.11-5
 - Replace bundled base64 implementation
 - Replace bundled gdata-java-client classes with apache-commons-codec
