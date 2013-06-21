@@ -1,12 +1,8 @@
-
-%global group_id  org.yaml
-
 Name:             snakeyaml
 Version:          1.11
-Release:          5%{?dist}
+Release:          6%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
-Group:            Development/Libraries
 # http://code.google.com/p/snakeyaml
 URL:              http://code.google.com/p/%{name}
 # http://snakeyaml.googlecode.com/files/SnakeYAML-all-1.9.zip
@@ -24,21 +20,13 @@ Patch1:           0002-Replace-bundled-gdata-java-client-classes-with-commo.patc
 
 BuildArch:        noarch
 
-BuildRequires:    java-devel
-BuildRequires:    jpackage-utils
 BuildRequires:    maven-local
-BuildRequires:    maven-surefire-provider-junit4
 BuildRequires:    cobertura
 BuildRequires:    joda-time
 BuildRequires:    gnu-getopt
 BuildRequires:    base64coder
 BuildRequires:    apache-commons-codec
 %{?fedora:BuildRequires: springframework}
-
-Requires:         java
-Requires:         jpackage-utils
-Requires:         base64coder
-Requires:         apache-commons-codec
 
 %description
 SnakeYAML features:
@@ -53,17 +41,16 @@ SnakeYAML features:
 
 %package javadoc
 Summary:          API documentation for %{name}
-Group:            Documentation
-Requires:         jpackage-utils
 
 %description javadoc
-This package contains the API documentation for %{name}.
+This package contains %{summary}.
 
 %prep
 %setup -q -n %{name}
-
 %patch0 -p1
 %patch1 -p1
+
+%mvn_file : %{name}
 
 %pom_remove_plugin org.codehaus.mojo:cobertura-maven-plugin
 %pom_add_dep net.sourceforge.cobertura:cobertura:any:test
@@ -80,39 +67,22 @@ rm -rf src/main/java/org/yaml/snakeyaml/external
 # convert CR+LF to LF
 sed -i 's/\r//g' LICENSE.txt
 
-%if !0%{?fedora}
-# Remove test dependencies because tests are skipped anyways.
-%pom_xpath_remove "pom:dependency[pom:scope[text()='test']]"
-%endif
-
 %build
-mvn-rpmbuild %{!?fedora:-Dmaven.test.skip=true} install
+%mvn_build %{!?fedora:-f}
 
 %install
-# jars
-install -d -m 755 %{buildroot}%{_javadir}
-install -p -m 644 target/%{name}-%{version}.jar %{buildroot}%{_javadir}/%{name}.jar
+%mvn_install
 
-# pom
-install -d -m 755 %{buildroot}%{_mavenpomdir}
-install -pm 644 pom.xml %{buildroot}%{_mavenpomdir}/JPP-%{name}.pom
-%add_maven_depmap JPP-%{name}.pom %{name}.jar
-
-# javadoc
-install -d -m 755 %{buildroot}%{_javadocdir}/%{name}
-cp -pr target/apidocs/* %{buildroot}%{_javadocdir}/%{name}
-
-%files
+%files -f .mfiles
 %doc LICENSE.txt
-%{_javadir}/%{name}.jar
-%{_mavenpomdir}/JPP-%{name}.pom
-%{_mavendepmapfragdir}/%{name}
 
-%files javadoc
+%files javadoc -f .mfiles-javadoc
 %doc LICENSE.txt
-%doc %{_javadocdir}/%{name}
 
 %changelog
+* Fri Jun 21 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.11-6
+- Update to current packaging guidelines
+
 * Fri Apr 26 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.11-5
 - Explain gdata-java and base64 bundling situation
 - Resolves: rhbz#875777
