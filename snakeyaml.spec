@@ -1,12 +1,13 @@
+%global vertag 3f1ee79d50cf
+
 Name:             snakeyaml
-Version:          1.11
-Release:          7%{?dist}
+Version:          1.13
+Release:          1%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 # http://code.google.com/p/snakeyaml
 URL:              http://code.google.com/p/%{name}
-# http://snakeyaml.googlecode.com/files/SnakeYAML-all-1.9.zip
-Source0:          http://%{name}.googlecode.com/files/SnakeYAML-all-%{version}.zip
+Source0:          https://snakeyaml.googlecode.com/archive/v%{version}.zip#/%{name}-%{version}.zip
 
 # Upstream has forked gdata-java and base64 and refuses [1] to
 # consider replacing them by external dependencies.  Bundled libraries
@@ -20,13 +21,19 @@ Patch1:           0002-Replace-bundled-gdata-java-client-classes-with-commo.patc
 
 BuildArch:        noarch
 
-BuildRequires:    maven-local
-BuildRequires:    cobertura
-BuildRequires:    joda-time
-BuildRequires:    gnu-getopt
-BuildRequires:    base64coder
-BuildRequires:    apache-commons-codec
-%{?fedora:BuildRequires: springframework}
+BuildRequires:  maven-local
+BuildRequires:  mvn(biz.source_code:base64coder)
+BuildRequires:  mvn(commons-codec:commons-codec)
+BuildRequires:  mvn(com.mycila.maven-license-plugin:maven-license-plugin)
+BuildRequires:  mvn(joda-time:joda-time)
+BuildRequires:  mvn(junit:junit)
+BuildRequires:  mvn(net.sourceforge.cobertura:cobertura)
+BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-changes-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-eclipse-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
+BuildRequires:  mvn(org.apache.velocity:velocity)
+BuildRequires:  mvn(org.springframework:spring-core)
 
 %description
 SnakeYAML features:
@@ -46,7 +53,7 @@ Summary:          API documentation for %{name}
 This package contains %{summary}.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n %{name}-%{vertag}
 %patch0 -p1
 %patch1 -p1
 
@@ -68,7 +75,7 @@ rm -rf src/main/java/org/yaml/snakeyaml/external
 sed -i 's/\r//g' LICENSE.txt
 
 %build
-%mvn_build %{!?fedora:-f}
+%mvn_build
 
 %install
 %mvn_install
@@ -80,6 +87,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Mon Sep 30 2013 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.13-1
+- Update to upstream version 1.13
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.11-7
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 
