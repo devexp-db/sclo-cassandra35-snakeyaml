@@ -2,7 +2,7 @@
 
 Name:             snakeyaml
 Version:          1.13
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 # http://code.google.com/p/snakeyaml
@@ -18,6 +18,8 @@ Source0:          https://snakeyaml.googlecode.com/archive/v%{version}.zip#/%{na
 Patch0:           0001-Replace-bundled-base64-implementation.patch
 # We don't have gdata-java in Fedora any longer, use commons-codec instead
 Patch1:           0002-Replace-bundled-gdata-java-client-classes-with-commo.patch
+# Fix tests on Java 8 (can be removed if version > 1.13)
+Patch2:           java8-use-linked-hashmap.patch
 
 BuildArch:        noarch
 
@@ -56,6 +58,7 @@ This package contains %{summary}.
 %setup -q -n %{name}-%{vertag}
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %mvn_file : %{name}
 
@@ -87,6 +90,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Mon Jun 16 2014 Michal Srb <msrb@redhat.com> - 1.13-3
+- Fix FTBFS
+
 * Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
