@@ -2,7 +2,7 @@
 
 Name:             snakeyaml
 Version:          1.13
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 # http://code.google.com/p/snakeyaml
@@ -33,6 +33,7 @@ BuildRequires:  mvn(net.sourceforge.cobertura:cobertura)
 BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-changes-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-eclipse-plugin)
+BuildRequires:  mvn(org.apache.maven.plugins:maven-site-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
 BuildRequires:  mvn(org.apache.velocity:velocity)
 BuildRequires:  mvn(org.springframework:spring-core)
@@ -90,6 +91,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Wed Jan 21 2015 Mat Booth <mat.booth@redhat.com> - 1.13-4
+- Add missing BR on maven-site-plugin
+
 * Mon Jun 16 2014 Michal Srb <msrb@redhat.com> - 1.13-3
 - Fix FTBFS
 
