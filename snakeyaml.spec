@@ -2,7 +2,7 @@
 
 Name:             snakeyaml
 Version:          1.13
-Release:          4%{?dist}
+Release:          5%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 # http://code.google.com/p/snakeyaml
@@ -24,6 +24,7 @@ Patch2:           java8-use-linked-hashmap.patch
 BuildArch:        noarch
 
 BuildRequires:  maven-local
+BuildRequires:  mvn(asm:asm)
 BuildRequires:  mvn(biz.source_code:base64coder)
 BuildRequires:  mvn(commons-codec:commons-codec)
 BuildRequires:  mvn(com.mycila.maven-license-plugin:maven-license-plugin)
@@ -91,6 +92,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Wed Mar 11 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.13-5
+- Add BR on objectweb-asm3
+
 * Wed Jan 21 2015 Mat Booth <mat.booth@redhat.com> - 1.13-4
 - Add missing BR on maven-site-plugin
 
