@@ -2,7 +2,7 @@
 
 Name:             snakeyaml
 Version:          1.13
-Release:          5%{?dist}
+Release:          6%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 # http://code.google.com/p/snakeyaml
@@ -30,7 +30,6 @@ BuildRequires:  mvn(commons-codec:commons-codec)
 BuildRequires:  mvn(com.mycila.maven-license-plugin:maven-license-plugin)
 BuildRequires:  mvn(joda-time:joda-time)
 BuildRequires:  mvn(junit:junit)
-BuildRequires:  mvn(net.sourceforge.cobertura:cobertura)
 BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-changes-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-eclipse-plugin)
@@ -65,7 +64,6 @@ This package contains %{summary}.
 %mvn_file : %{name}
 
 %pom_remove_plugin org.codehaus.mojo:cobertura-maven-plugin
-%pom_add_dep net.sourceforge.cobertura:cobertura:any:test
 sed -i "/<artifactId>spring</s/spring/&-core/" pom.xml
 rm -f src/test/java/examples/SpringTest.java
 
@@ -92,6 +90,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Wed Mar 25 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.13-6
+- Remove build dependency on cobertura
+
 * Wed Mar 11 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.13-5
 - Add BR on objectweb-asm3
 
