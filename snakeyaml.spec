@@ -2,7 +2,7 @@
 
 Name:             snakeyaml
 Version:          1.13
-Release:          6%{?dist}
+Release:          7%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 # http://code.google.com/p/snakeyaml
@@ -27,11 +27,9 @@ BuildRequires:  maven-local
 BuildRequires:  mvn(asm:asm)
 BuildRequires:  mvn(biz.source_code:base64coder)
 BuildRequires:  mvn(commons-codec:commons-codec)
-BuildRequires:  mvn(com.mycila.maven-license-plugin:maven-license-plugin)
 BuildRequires:  mvn(joda-time:joda-time)
 BuildRequires:  mvn(junit:junit)
 BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-changes-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-eclipse-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-site-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
@@ -64,6 +62,9 @@ This package contains %{summary}.
 %mvn_file : %{name}
 
 %pom_remove_plugin org.codehaus.mojo:cobertura-maven-plugin
+%pom_remove_plugin :maven-changes-plugin
+%pom_remove_plugin :maven-license-plugin
+
 sed -i "/<artifactId>spring</s/spring/&-core/" pom.xml
 rm -f src/test/java/examples/SpringTest.java
 
@@ -90,6 +91,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Tue Mar 31 2015 Michael Simacek <msimacek@redhat.com> - 1.13-7
+- Remove BR on maven-changes-plugin
+
 * Wed Mar 25 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.13-6
 - Remove build dependency on cobertura
 
