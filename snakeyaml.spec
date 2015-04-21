@@ -2,7 +2,7 @@
 
 Name:             snakeyaml
 Version:          1.13
-Release:          7%{?dist}
+Release:          8%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 # http://code.google.com/p/snakeyaml
@@ -64,6 +64,7 @@ This package contains %{summary}.
 %pom_remove_plugin org.codehaus.mojo:cobertura-maven-plugin
 %pom_remove_plugin :maven-changes-plugin
 %pom_remove_plugin :maven-license-plugin
+%pom_remove_plugin :maven-javadoc-plugin
 
 sed -i "/<artifactId>spring</s/spring/&-core/" pom.xml
 rm -f src/test/java/examples/SpringTest.java
@@ -91,6 +92,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Tue Apr 21 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.13-8
+- Remove maven-javadoc-plugin from POM
+
 * Tue Mar 31 2015 Michael Simacek <msimacek@redhat.com> - 1.13-7
 - Remove BR on maven-changes-plugin
 
