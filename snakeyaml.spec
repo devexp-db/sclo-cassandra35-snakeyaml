@@ -1,13 +1,12 @@
-%global vertag 3f1ee79d50cf
+%global vertag 106418cae0ba
 
 Name:             snakeyaml
-Version:          1.13
-Release:          9%{?dist}
+Version:          1.16
+Release:          1%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
-# http://code.google.com/p/snakeyaml
-URL:              http://code.google.com/p/%{name}
-Source0:          https://snakeyaml.googlecode.com/archive/v%{version}.zip#/%{name}-%{version}.zip
+URL:              https://bitbucket.org/asomov/%{name}/
+Source0:          https://bitbucket.org/asomov/snakeyaml/get/v%{version}.tar.bz2#/%{name}-%{version}.tar.bz2
 
 # Upstream has forked gdata-java and base64 and refuses [1] to
 # consider replacing them by external dependencies.  Bundled libraries
@@ -18,8 +17,6 @@ Source0:          https://snakeyaml.googlecode.com/archive/v%{version}.zip#/%{na
 Patch0:           0001-Replace-bundled-base64-implementation.patch
 # We don't have gdata-java in Fedora any longer, use commons-codec instead
 Patch1:           0002-Replace-bundled-gdata-java-client-classes-with-commo.patch
-# Fix tests on Java 8 (can be removed if version > 1.13)
-Patch2:           java8-use-linked-hashmap.patch
 
 BuildArch:        noarch
 
@@ -54,10 +51,9 @@ Summary:          API documentation for %{name}
 This package contains %{summary}.
 
 %prep
-%setup -q -n %{name}-%{vertag}
+%setup -q -n asomov-%{name}-%{vertag}
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 
 %mvn_file : %{name}
 
@@ -92,6 +88,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Mon Sep 28 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.16-1
+- Update to upstream version 1.16
+
 * Fri Jun 19 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.13-9
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 

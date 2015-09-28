@@ -1,7 +1,8 @@
-From 9104006de9e3e601d2ac6c733b38e6c29728b2ce Mon Sep 17 00:00:00 2001
+From 4a8a85e1f1a9974cdb416c895280943ac51561ca Mon Sep 17 00:00:00 2001
 From: Michal Srb <msrb@redhat.com>
 Date: Fri, 26 Apr 2013 07:32:04 +0200
-Subject: [PATCH] Replace bundled gdata-java-client classes with commons-codec
+Subject: [PATCH 2/2] Replace bundled gdata-java-client classes with
+ commons-codec
 
 ---
  .../com/google/gdata/util/common/base/Escaper.java |  97 ----
@@ -916,7 +917,7 @@ index 5403185..0000000
 -    };
 -}
 diff --git a/src/main/java/org/yaml/snakeyaml/util/UriEncoder.java b/src/main/java/org/yaml/snakeyaml/util/UriEncoder.java
-index af30dea..d0fe032 100644
+index e23904f..f266387 100644
 --- a/src/main/java/org/yaml/snakeyaml/util/UriEncoder.java
 +++ b/src/main/java/org/yaml/snakeyaml/util/UriEncoder.java
 @@ -23,25 +23,46 @@ import java.nio.charset.CharacterCodingException;
@@ -975,5 +976,5 @@ index af30dea..d0fe032 100644
  
      /**
 -- 
-1.8.1.4
+2.4.3
 
