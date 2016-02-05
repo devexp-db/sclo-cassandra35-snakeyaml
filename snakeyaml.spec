@@ -2,7 +2,7 @@
 
 Name:             snakeyaml
 Version:          1.16
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 URL:              https://bitbucket.org/asomov/%{name}/
@@ -88,6 +88,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.16-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
 * Mon Sep 28 2015 Mikolaj Izdebski <mizdebsk@redhat.com> - 1.16-1
 - Update to upstream version 1.16
 
