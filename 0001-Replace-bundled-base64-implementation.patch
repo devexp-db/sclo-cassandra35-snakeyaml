@@ -1,44 +1,33 @@
-From eb36499dacbbe4d10979177c696dc81187c445fe Mon Sep 17 00:00:00 2001
+From 7eb4cceb36eff9d863abe45bafa6d94c6e7e9270 Mon Sep 17 00:00:00 2001
 From: Michal Srb <msrb@redhat.com>
 Date: Wed, 24 Apr 2013 11:25:52 +0200
 Subject: [PATCH 1/2] Replace bundled base64 implementation
 
 ---
- pom.xml                                            |   5 +
- .../snakeyaml/constructor/SafeConstructor.java     |   3 +-
+ .../snakeyaml/constructor/SafeConstructor.java     |   2 +-
  .../external/biz/base64Coder/Base64Coder.java      | 305 ---------------------
- .../snakeyaml/representer/SafeRepresenter.java     |   3 +-
- .../source_code/base64Coder/Base64CoderTest.java   |   2 +-
- .../snakeyaml/issues/issue99/YamlBase64Test.java   |   3 +-
- 6 files changed, 12 insertions(+), 309 deletions(-)
+ .../snakeyaml/representer/SafeRepresenter.java     |   2 +-
+ .../source_code/base64Coder/Base64CoderTest.java   |  73 -----
+ .../snakeyaml/issues/issue99/YamlBase64Test.java   |   2 +-
+ 5 files changed, 3 insertions(+), 381 deletions(-)
  delete mode 100644 src/main/java/org/yaml/snakeyaml/external/biz/base64Coder/Base64Coder.java
+ delete mode 100644 src/test/java/biz/source_code/base64Coder/Base64CoderTest.java
 
-diff --git a/pom.xml b/pom.xml
-index e02d181..ece4e91 100644
---- a/pom.xml
-+++ b/pom.xml
-@@ -83,6 +83,11 @@
-             <version>1.6</version>
-             <scope>test</scope>
-         </dependency>
-+        <dependency>
-+            <groupId>biz.source_code</groupId>
-+            <artifactId>base64coder</artifactId>
-+            <version>2010-12-19</version>
-+        </dependency>
-     </dependencies>
-     <distributionManagement>
-         <repository>
 diff --git a/src/main/java/org/yaml/snakeyaml/constructor/SafeConstructor.java b/src/main/java/org/yaml/snakeyaml/constructor/SafeConstructor.java
-index b5572ea..b472be7 100644
+index b5572ea..190384e 100644
 --- a/src/main/java/org/yaml/snakeyaml/constructor/SafeConstructor.java
 +++ b/src/main/java/org/yaml/snakeyaml/constructor/SafeConstructor.java
-@@ -31,8 +31,9 @@ import java.util.TimeZone;
- import java.util.regex.Matcher;
- import java.util.regex.Pattern;
+@@ -15,6 +15,7 @@
+  */
+ package org.yaml.snakeyaml.constructor;
  
 +import biz.source_code.base64Coder.Base64Coder;
-+
+ import java.math.BigInteger;
+ import java.text.NumberFormat;
+ import java.text.ParseException;
+@@ -32,7 +33,6 @@ import java.util.regex.Matcher;
+ import java.util.regex.Pattern;
+ 
  import org.yaml.snakeyaml.error.YAMLException;
 -import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
  import org.yaml.snakeyaml.nodes.MappingNode;
@@ -356,45 +345,117 @@ index 65923b6..0000000
 -
 -} // end class Base64Coder
 diff --git a/src/main/java/org/yaml/snakeyaml/representer/SafeRepresenter.java b/src/main/java/org/yaml/snakeyaml/representer/SafeRepresenter.java
-index 9927fa6..52ef4b3 100644
+index 147e3af..b8dd4e0 100644
 --- a/src/main/java/org/yaml/snakeyaml/representer/SafeRepresenter.java
 +++ b/src/main/java/org/yaml/snakeyaml/representer/SafeRepresenter.java
-@@ -30,8 +30,9 @@ import java.util.Set;
- import java.util.TimeZone;
- import java.util.regex.Pattern;
+@@ -15,6 +15,7 @@
+  */
+ package org.yaml.snakeyaml.representer;
  
 +import biz.source_code.base64Coder.Base64Coder;
-+
+ import java.io.UnsupportedEncodingException;
+ import java.math.BigInteger;
+ import java.util.ArrayList;
+@@ -32,7 +33,6 @@ import java.util.UUID;
+ import java.util.regex.Pattern;
+ 
  import org.yaml.snakeyaml.error.YAMLException;
 -import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
  import org.yaml.snakeyaml.nodes.Node;
  import org.yaml.snakeyaml.nodes.Tag;
  import org.yaml.snakeyaml.reader.StreamReader;
 diff --git a/src/test/java/biz/source_code/base64Coder/Base64CoderTest.java b/src/test/java/biz/source_code/base64Coder/Base64CoderTest.java
-index 60f6d84..8ca54e8 100644
+deleted file mode 100644
+index 60f6d84..0000000
 --- a/src/test/java/biz/source_code/base64Coder/Base64CoderTest.java
-+++ b/src/test/java/biz/source_code/base64Coder/Base64CoderTest.java
-@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
- 
- import junit.framework.TestCase;
- 
++++ /dev/null
+@@ -1,73 +0,0 @@
+-/**
+- * Copyright (c) 2008, http://www.snakeyaml.org
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- *     http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-package biz.source_code.base64Coder;
+-
+-import java.io.UnsupportedEncodingException;
+-
+-import junit.framework.TestCase;
+-
 -import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
-+import biz.source_code.base64Coder.Base64Coder;
- 
- public class Base64CoderTest extends TestCase {
- 
+-
+-public class Base64CoderTest extends TestCase {
+-
+-    public void testDecode() throws UnsupportedEncodingException {
+-        check("Aladdin:open sesame", "QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
+-        check("a", "YQ==");
+-        check("aa", "YWE=");
+-        check("a=", "YT0=");
+-        check("", "");
+-    }
+-
+-    public void testFailure1() throws UnsupportedEncodingException {
+-        try {
+-            Base64Coder.decode("YQ=".toCharArray());
+-            fail();
+-        } catch (Exception e) {
+-            assertEquals("Length of Base64 encoded input string is not a multiple of 4.",
+-                    e.getMessage());
+-        }
+-    }
+-
+-    public void testFailure2() throws UnsupportedEncodingException {
+-        checkInvalid("\tWE=");
+-        checkInvalid("Y\tE=");
+-        checkInvalid("YW\t=");
+-        checkInvalid("YWE\t");
+-        //
+-        checkInvalid("©WE=");
+-        checkInvalid("Y©E=");
+-        checkInvalid("YW©=");
+-        checkInvalid("YWE©");
+-    }
+-
+-    private void checkInvalid(String encoded) {
+-        try {
+-            Base64Coder.decode(encoded.toCharArray());
+-            fail("Illegal chanracter.");
+-        } catch (Exception e) {
+-            assertEquals("Illegal character in Base64 encoded data.", e.getMessage());
+-        }
+-    }
+-
+-    private void check(String text, String encoded) throws UnsupportedEncodingException {
+-        char[] s1 = Base64Coder.encode(text.getBytes("UTF-8"));
+-        String t1 = new String(s1);
+-        assertEquals(encoded, t1);
+-        byte[] s2 = Base64Coder.decode(encoded.toCharArray());
+-        String t2 = new String(s2, "UTF-8");
+-        assertEquals(text, t2);
+-    }
+-}
 diff --git a/src/test/java/org/yaml/snakeyaml/issues/issue99/YamlBase64Test.java b/src/test/java/org/yaml/snakeyaml/issues/issue99/YamlBase64Test.java
-index ddffdc3..2a26bfb 100644
+index 32e7eef..3275c7e 100644
 --- a/src/test/java/org/yaml/snakeyaml/issues/issue99/YamlBase64Test.java
 +++ b/src/test/java/org/yaml/snakeyaml/issues/issue99/YamlBase64Test.java
-@@ -22,12 +22,13 @@ import java.util.Map;
- 
- import junit.framework.TestCase;
+@@ -15,6 +15,7 @@
+  */
+ package org.yaml.snakeyaml.issues.issue99;
  
 +import biz.source_code.base64Coder.Base64Coder;
-+
- import org.yaml.snakeyaml.Util;
- import org.yaml.snakeyaml.Yaml;
+ import java.io.BufferedInputStream;
+ import java.io.IOException;
+ import java.io.InputStream;
+@@ -27,7 +28,6 @@ import org.yaml.snakeyaml.Yaml;
  import org.yaml.snakeyaml.YamlDocument;
  import org.yaml.snakeyaml.constructor.AbstractConstruct;
  import org.yaml.snakeyaml.constructor.Constructor;
@@ -403,5 +464,5 @@ index ddffdc3..2a26bfb 100644
  import org.yaml.snakeyaml.nodes.ScalarNode;
  import org.yaml.snakeyaml.nodes.Tag;
 -- 
-2.4.3
+2.7.4
 

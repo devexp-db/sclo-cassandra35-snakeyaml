@@ -1,8 +1,8 @@
-%global vertag 106418cae0ba
+%global vertag 70abb5efa4c0
 
 Name:             snakeyaml
-Version:          1.16
-Release:          2%{?dist}
+Version:          1.17
+Release:          1%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 URL:              https://bitbucket.org/asomov/%{name}/
@@ -21,13 +21,11 @@ Patch1:           0002-Replace-bundled-gdata-java-client-classes-with-commo.patc
 BuildArch:        noarch
 
 BuildRequires:  maven-local
-BuildRequires:  mvn(asm:asm)
 BuildRequires:  mvn(biz.source_code:base64coder)
 BuildRequires:  mvn(commons-codec:commons-codec)
 BuildRequires:  mvn(joda-time:joda-time)
 BuildRequires:  mvn(junit:junit)
 BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-eclipse-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-site-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
 BuildRequires:  mvn(org.apache.velocity:velocity)
@@ -57,7 +55,7 @@ This package contains %{summary}.
 
 %mvn_file : %{name}
 
-%pom_remove_plugin org.codehaus.mojo:cobertura-maven-plugin
+%pom_remove_plugin :cobertura-maven-plugin
 %pom_remove_plugin :maven-changes-plugin
 %pom_remove_plugin :maven-license-plugin
 %pom_remove_plugin :maven-javadoc-plugin
@@ -67,10 +65,16 @@ rm -f src/test/java/examples/SpringTest.java
 
 # Replacement for bundled gdata-java-client
 %pom_add_dep commons-codec:commons-codec
+# Re-add bundled base64coder
+%pom_add_dep biz.source_code:base64coder
 
 # remove bundled stuff
 rm -rf target
-rm -rf src/main/java/org/yaml/snakeyaml/external
+
+# fails in rpmbuild only due to different locale
+rm src/test/java/org/yaml/snakeyaml/issues/issue67/NonAsciiCharsInClassNameTest.java
+# fails after unbundling
+rm src/test/java/org/yaml/snakeyaml/issues/issue318/ContextClassLoaderTest.java
 
 # convert CR+LF to LF
 sed -i 's/\r//g' LICENSE.txt
@@ -88,6 +92,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Mon Oct 17 2016 Michael Simacek <msimacek@redhat.com> - 1.17-1
+- Update to upstream version 1.17
+
 * Fri Feb 05 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.16-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 

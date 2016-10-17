@@ -1,4 +1,4 @@
-From 4a8a85e1f1a9974cdb416c895280943ac51561ca Mon Sep 17 00:00:00 2001
+From f06ff492f18d7c9cdf861a79293279e5ed55823f Mon Sep 17 00:00:00 2001
 From: Michal Srb <msrb@redhat.com>
 Date: Fri, 26 Apr 2013 07:32:04 +0200
 Subject: [PATCH 2/2] Replace bundled gdata-java-client classes with
@@ -976,5 +976,5 @@ index e23904f..f266387 100644
  
      /**
 -- 
-2.4.3
+2.7.4
 
