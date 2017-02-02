@@ -1,8 +1,10 @@
 %global vertag 70abb5efa4c0
 
+%bcond_without    spring
+
 Name:             snakeyaml
 Version:          1.17
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 URL:              https://bitbucket.org/asomov/%{name}/
@@ -26,10 +28,11 @@ BuildRequires:  mvn(commons-codec:commons-codec)
 BuildRequires:  mvn(joda-time:joda-time)
 BuildRequires:  mvn(junit:junit)
 BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-site-plugin)
 BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
 BuildRequires:  mvn(org.apache.velocity:velocity)
+%if %{with spring}
 BuildRequires:  mvn(org.springframework:spring-core)
+%endif
 
 %description
 SnakeYAML features:
@@ -59,6 +62,7 @@ This package contains %{summary}.
 %pom_remove_plugin :maven-changes-plugin
 %pom_remove_plugin :maven-license-plugin
 %pom_remove_plugin :maven-javadoc-plugin
+%pom_remove_plugin :maven-site-plugin
 
 sed -i "/<artifactId>spring</s/spring/&-core/" pom.xml
 rm -f src/test/java/examples/SpringTest.java
@@ -79,6 +83,11 @@ rm src/test/java/org/yaml/snakeyaml/issues/issue318/ContextClassLoaderTest.java
 # convert CR+LF to LF
 sed -i 's/\r//g' LICENSE.txt
 
+%if %{without spring}
+%pom_remove_dep org.springframework
+rm -r src/test/java/org/yaml/snakeyaml/issues/issue9
+%endif
+
 %build
 %mvn_build
 
@@ -92,6 +101,9 @@ sed -i 's/\r//g' LICENSE.txt
 %doc LICENSE.txt
 
 %changelog
+* Thu Feb 02 2017 Michael Simacek <msimacek@redhat.com> - 1.17-2
+- Add conditional for spring
+
 * Mon Oct 17 2016 Michael Simacek <msimacek@redhat.com> - 1.17-1
 - Update to upstream version 1.17
 
