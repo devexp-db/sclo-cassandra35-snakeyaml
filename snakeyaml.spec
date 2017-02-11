@@ -4,7 +4,7 @@
 
 Name:             snakeyaml
 Version:          1.17
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          YAML parser and emitter for the Java programming language
 License:          ASL 2.0
 URL:              https://bitbucket.org/asomov/%{name}/
@@ -101,6 +101,9 @@ rm -r src/test/java/org/yaml/snakeyaml/issues/issue9
 %doc LICENSE.txt
 
 %changelog
+* Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.17-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+
 * Thu Feb 02 2017 Michael Simacek <msimacek@redhat.com> - 1.17-2
 - Add conditional for spring
 
