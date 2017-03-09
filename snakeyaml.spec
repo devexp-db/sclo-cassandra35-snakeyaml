@@ -1,14 +1,17 @@
+%{?scl:%scl_package snakeyaml}
+%{!?scl:%global pkg_name %{name}}
+
 %global vertag 70abb5efa4c0
 
-%bcond_without    spring
+%bcond_without spring
 
-Name:             snakeyaml
-Version:          1.17
-Release:          3%{?dist}
-Summary:          YAML parser and emitter for the Java programming language
-License:          ASL 2.0
-URL:              https://bitbucket.org/asomov/%{name}/
-Source0:          https://bitbucket.org/asomov/snakeyaml/get/v%{version}.tar.bz2#/%{name}-%{version}.tar.bz2
+Name:		%{?scl_prefix}snakeyaml
+Version:	1.17
+Release:	4%{?dist}
+Summary:	YAML parser and emitter for the Java programming language
+License:	ASL 2.0
+URL:		https://bitbucket.org/asomov/snakeyaml/
+Source0:	https://bitbucket.org/asomov/%{pkg_name}/get/v%{version}.tar.bz2#/%{pkg_name}-%{version}.tar.bz2
 
 # Upstream has forked gdata-java and base64 and refuses [1] to
 # consider replacing them by external dependencies.  Bundled libraries
@@ -16,23 +19,26 @@ Source0:          https://bitbucket.org/asomov/snakeyaml/get/v%{version}.tar.bz2
 # See rhbz#875777 and http://code.google.com/p/snakeyaml/issues/detail?id=175
 #
 # Remove use of bundled Base64 implementation
-Patch0:           0001-Replace-bundled-base64-implementation.patch
+Patch0:		0001-Replace-bundled-base64-implementation.patch
 # We don't have gdata-java in Fedora any longer, use commons-codec instead
-Patch1:           0002-Replace-bundled-gdata-java-client-classes-with-commo.patch
+Patch1:		0002-Replace-bundled-gdata-java-client-classes-with-commo.patch
 
-BuildArch:        noarch
+BuildArch:	noarch
 
-BuildRequires:  maven-local
-BuildRequires:  mvn(biz.source_code:base64coder)
-BuildRequires:  mvn(commons-codec:commons-codec)
-BuildRequires:  mvn(joda-time:joda-time)
-BuildRequires:  mvn(junit:junit)
-BuildRequires:  mvn(org.apache.felix:maven-bundle-plugin)
-BuildRequires:  mvn(org.apache.maven.plugins:maven-source-plugin)
-BuildRequires:  mvn(org.apache.velocity:velocity)
+BuildRequires:	%{?scl_prefix_maven}maven-local
+BuildRequires:	%{?scl_prefix_java_common}base64coder
+BuildRequires:	%{?scl_prefix_java_common}apache-commons-codec
+BuildRequires:	%{?scl_prefix_maven}joda-time
+BuildRequires:	%{?scl_prefix_java_common}junit
+BuildRequires:	%{?scl_prefix_maven}maven-plugin-bundle
+BuildRequires:	%{?scl_prefix_maven}maven-source-plugin
+BuildRequires:	%{?scl_prefix_maven}velocity
+%{?scl:Requires: %scl_runtime}
+%{!?scl:
 %if %{with spring}
 BuildRequires:  mvn(org.springframework:spring-core)
 %endif
+}
 
 %description
 SnakeYAML features:
@@ -46,17 +52,18 @@ SnakeYAML features:
 
 
 %package javadoc
-Summary:          API documentation for %{name}
+Summary:	API documentation for %{name}
 
 %description javadoc
 This package contains %{summary}.
 
 %prep
-%setup -q -n asomov-%{name}-%{vertag}
+%setup -q -n asomov-%{pkg_name}-%{vertag}
 %patch0 -p1
 %patch1 -p1
 
-%mvn_file : %{name}
+%{?scl:scl enable %{scl_maven} %{scl} - << "EOF"}
+%mvn_file : %{pkg_name}
 
 %pom_remove_plugin :cobertura-maven-plugin
 %pom_remove_plugin :maven-changes-plugin
@@ -88,11 +95,19 @@ sed -i 's/\r//g' LICENSE.txt
 rm -r src/test/java/org/yaml/snakeyaml/issues/issue9
 %endif
 
+%{?scl:%pom_remove_dep org.springframework
+rm -r src/test/java/org/yaml/snakeyaml/issues/issue9}
+%{?scl:EOF}
+
 %build
+%{?scl:scl enable %{scl_maven} %{scl} - << "EOF"}
 %mvn_build
+%{?scl:EOF}
 
 %install
+%{?scl:scl enable %{scl_maven} %{scl} - << "EOF"}
 %mvn_install
+%{?scl:EOF}
 
 %files -f .mfiles
 %doc LICENSE.txt
@@ -101,6 +116,9 @@ rm -r src/test/java/org/yaml/snakeyaml/issues/issue9
 %doc LICENSE.txt
 
 %changelog
+* Thu Mar 09 2017 Tomas Repik <trepik@redhat.com> - 1.17-4
+- scl conversion
+
 * Sat Feb 11 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.17-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
